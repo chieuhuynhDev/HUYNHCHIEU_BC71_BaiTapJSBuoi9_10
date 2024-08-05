@@ -5,16 +5,37 @@ var DSNV = [];
 // lấy dữ liệu từ local storage khi load lại trang
 var data = localStorage.getItem("DSNV_JSON");
 //convet JSON trở lại aray gốc
-DSNV = JSON.parse(data);
 
-renderDSNV();
+let nvArr = JSON.parse(data);
+
+// convert từ arr obj cũ sang arr obj mới
+
+for (var i = 0; i < nvArr.length; i++) {
+  var data = nvArr[i];
+  var nv = new NhanVien(
+    data.taiKhoan,
+    data.hoTen,
+    data.email,
+    data.matKhau,
+    data.ngayLam,
+    data.luongCB,
+    data.chucVu,
+    data.gioLam
+  );
+  DSNV.push(nv);
+}
+
+renderDSNV("all");
 // hàm render dsnv
 
-function renderDSNV() {
+function renderDSNV(loaiNV) {
+  console.log("🚀 ~ renderDSNV ~ loaiNV:", loaiNV);
+
   var contentHTML = "";
   for (let i = 0; i < DSNV.length; i++) {
     var nv = DSNV[i];
-    var trString = `<tr>
+    if (loaiNV === "all" || nv.xepLoai === loaiNV) {
+      var trString = `<tr>
         <td>${nv.taiKhoan}</td>
         <td>${nv.hoTen}</td>
         <td>${nv.email}</td>
@@ -25,7 +46,8 @@ function renderDSNV() {
         <td> <button class="btn btn-danger" onclick="deleteEmp('${nv.taiKhoan}')" >Xóa</button>
       <button class="btn btn-warning" onclick="editEmp('${nv.taiKhoan}')">Sửa</button> </td>
         </tr>`;
-    contentHTML += trString;
+      contentHTML += trString;
+    }
   }
   document.getElementById("tableDanhSach").innerHTML = contentHTML;
 }
@@ -54,7 +76,7 @@ function addEmployee() {
     var jsonDSNV = JSON.stringify(DSNV);
     // lưu vào local stroage
     localStorage.setItem("DSNV_JSON", jsonDSNV);
-    renderDSNV();
+    renderDSNV("all");
   }
 }
 
@@ -74,7 +96,7 @@ function deleteEmp(taiKhoanNV) {
     var jsonDSNV = JSON.stringify(DSNV);
     // lưu vào local stroage
     localStorage.setItem("DSNV_JSON", jsonDSNV);
-    renderDSNV();
+    renderDSNV("all");
   }
 }
 
@@ -100,7 +122,6 @@ function editEmp(taiKhoanEmp) {
     document.getElementById("tknv").setAttribute("readonly", true);
   }
   $("#myModal").modal("show");
-  renderDSNV();
 }
 
 // cập nhật NV
@@ -128,6 +149,6 @@ function updateEmp() {
     // lưu vào local stroage
     localStorage.setItem("DSNV_JSON", jsonDSNV);
     $("#myModal").modal("hide");
-    renderDSNV();
+    renderDSNV("all");
   }
 }

@@ -23,3 +23,16 @@ function getInfoFromForm() {
 
   return nhanVien;
 }
+
+// reload modal
+function reloadModal() {
+  document.getElementById("tknv").removeAttribute("readonly");
+  document.getElementById("tknv").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("email").value = "";
+  document.getElementById("password").value = "";
+  document.getElementById("datepicker").value = "";
+  document.getElementById("luongCB").value = "";
+  document.getElementById("chucvu").value = "";
+  document.getElementById("gioLam").value = "";
+}
